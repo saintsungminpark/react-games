@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>multiplication</title>
+
+    <!-- 리액트 스크립트 -->
+    <script crossorigin src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
+
+    <!-- 리액트 돔 스크립트 -->
+    <script crossorigin src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+
+    <!-- 바벨 스크립트(jsx를 위함)-->
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        class Multiplication extends React.Component {
+
+            // 바뀌는것들 속성으로 추가해준다
+            state = {
+                first: Math.ceil(Math.random() * 9),
+                second: Math.ceil(Math.random() * 9),
+                value: '',
+                result: '',
+            };
+
+
+            onSubmit = (e) => {
+                e.preventDefault();
+                // Number() or parseInt()
+                // prevState == this.state(이전 객체 즉, 위의 state{}객체) // 일반 객체대신(setState{}) 함수를(setState(() => {}}) 쓰는 상황은 객체안에 this.state가 나올때 사용한다
+                if (Number(this.state.value) === this.state.first * this.state.second) {
+                    this.setState((prevState) => {
+                        return {
+                            first: Math.ceil(Math.random() * 9),
+                            second: Math.ceil(Math.random() * 9),
+                            value: '',
+                            result: prevState.value + ' ' + '정답',
+                        };
+                    });
+                    this.input.focus()
+                } else {
+                    this.setState((prevState) => {
+                        return {
+                            value: '',
+                            result: prevState.value + ' ' + '오답'
+                        };
+                    });
+                    this.input.focus()
+                }
+            };
+
+            onChange = (e) => {
+                this.setState({ value: e.target.value })
+            };
+
+            input;
+            onRef = (c) => { this.input = c; };
+            
+            // 랜던안에서 함수 입력하지 말고 밖으로 빼내준다: 이유는 랜더부분은 매번 반복적으로 실행되는데 랜더 안에 함수들이 있다면 그 함수들이 매번 재실행되어 불필요한 리소스가 생기기 떄문
+            render() {
+                return (
+                    // onclick, onsubmit, onchange, onload, oninput, onfocus, onblur
+                    // <React.Fragment> == React의 불필요해 보이는 <div>를 쓰지 않기 위해 사용, 나중에 바벨2로 업그레이드 시 <> </> 로 대체 가능하다
+                    // ref == document.querySelector.focus()
+                    <React.Fragment>
+                        <div>{this.state.first} X {this.state.second} = ?</div>
+                        <form onSubmit={this.onSubmit}>
+                            <input ref={this.onRef} type="number" value={this.state.value} onChange={this.onChange} />
+                        </form>
+                        <div>{this.state.result}</div>
+                    </React.Fragment>
+                );
+            }
+        }
+    </script>
+
+    <script type="text/babel">
+        ReactDOM.render(<Multiplication />, document.querySelector('#root'));
+    </script>
+
+</body>
+
+</html>
