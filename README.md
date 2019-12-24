@@ -1,2 +1,2 @@
 # react-games
-all games on react, react hooks
+all games on react js(hooks)
